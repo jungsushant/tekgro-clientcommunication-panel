@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { log } from "console";
 import {
   getServerSession,
   type DefaultSession,
@@ -21,6 +22,7 @@ declare module "next-auth" {
     user: {
       id: string;
       // ...other properties
+      role: string;
     } & DefaultSession["user"];
   }
 
@@ -52,14 +54,16 @@ export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
       profile(profile: GithubProfile) {
-        console.log(profile);
         let userRole = "user";
-        if (profile?.email === "kabitashahi2022@whitehousecmt.edu.np")
+        if (profile?.email === "kabitashahi2022@whitehousecmt.edu.np") {
           userRole = "admin";
+        }
         return {
-          ...profile,
           id: profile.id.toString(),
           role: userRole,
+          email: profile.email,
+          name: profile.name,
+          image: profile.avatar_url,
         };
       },
       clientId: env.GITHUB_CLIENT_ID,

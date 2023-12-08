@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import Navigation from "./(components)/Navigation";
-
+import AuthProvider from "~/context/Authprovider";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -25,12 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider cookies={cookies().toString()}>
-          <div>
-            <Navigation />
-            {children}
-          </div>
-        </TRPCReactProvider>
+        <AuthProvider>
+          <TRPCReactProvider cookies={cookies().toString()}>
+            <div>
+              <Navigation />
+              {children}
+            </div>
+          </TRPCReactProvider>
+        </AuthProvider>
       </body>
     </html>
   );
